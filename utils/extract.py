@@ -1,5 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+import time
+
+# Jumlah halaman maksimum yang akan di-scrape
+MAX_PAGE = 3
 
 HEADERS = {
     "User-Agent": (
@@ -26,40 +30,60 @@ def extract_product_data(card):
         'size': size.text.strip() if size else 'No Size Info',
         'gender': gender.text.strip() if gender else 'No Gender Info',
     }
+    return product
 
 def fetch_page_content(url):
     """"Mengambil konten HTML dari URL yang diberikan dengan penanganan kesalahan."""
+    # Kirim permintaan HTTP ke halaman
     try:
-        # Kirim permintaan HTTP ke halaman
-        response = requests.get(url, headers=HEADERS, timeout=10)
+        response = requests.get(url)
         response.raise_for_status()
-        return response.content
+        return response.text
     except requests.exceptions.RequestException as error:
-        print(f"Error saat mengambil {url}: {error}")
-        return None
+        raise Exception (f"Error saat mengambil {url}: {error}")
 
-def extract_data_from_page(url):
+def scrape_website(url, delay = 2):
     """Mengambil data produk dari halaman koleksi berdasarkan URL."""
-    response = fetch_page_content(url)
-    if not response:
-        return []
-    
+    data = []
+    base_url = url
+    response = fetch_page_content(base_url)
+    print(f"Scraping halaman: {base_url}")
+
     try:
         # Parsing isi halaman dengan BeautifulSoup
-        soup = BeautifulSoup(response.text, 'html.parser')
-        data = []
-
+        soup = BeautifulSoup(response, 'html.parser')
         # Temukan semua elemen kartu produk
-        cards = soup.find_all('div', class_='collection-card')
-        if not cards:
-            print(f"Tidak ada produk ditemukan di halaman {url}")
-
-        for card in cards:
-            product = extract_product_data(card)
+        product_element = soup.find_all('div', class_='collection-card')
+        # Cek apakah ada produk ditemukan atau tidak
+        if not product_element:
+            print(f"Tidak ada produk ditemukan di halaman {base_url}")
+        for article in product_element:
+            product = extract_product_data(article)
             data.append(product)
-
-        print(f"{len(data)} produk berhasil diambil dari {url}")
-        return data
-
+        print(f"{len(data)} produk berhasil diambil dari {base_url}")
     except Exception as parse_error:
         raise Exception(f"Terjadi kesalahan saat parsing HTML: {parse_error}")
+    
+    for page_number in range(2,MAX_PAGE + 1): 
+        page_url = f"{url}page{page_number}"
+        response = fetch_page_content(page_url)
+        print(f"Scraping halaman ke-{page_number}: {page_url}")
+
+        try:
+            # Parsing isi halaman dengan BeautifulSoup
+            soup = BeautifulSoup(response, 'html.parser')
+            # Temukan semua elemen kartu produk
+            product_element = soup.find_all('div', class_='collection-card')
+            if not product_element:
+                print(f"Tidak ada produk ditemukan di halaman {url}")
+            for article in product_element:
+                product = extract_product_data(article)
+                data.append(product)
+            print(f"{len(data)} produk berhasil diambil dari {url}")
+            page_number += 1
+            time.sleep(delay) # Delay sebelum halaman berikutnya
+
+        except Exception as parse_error:
+            raise Exception(f"Terjadi kesalahan saat parsing HTML: {parse_error}")
+
+    return data

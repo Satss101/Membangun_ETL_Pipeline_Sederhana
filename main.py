@@ -1,38 +1,18 @@
-from utils.extract import extract_data_from_page
+from utils.extract import scrape_website
 from utils.transform import clean_and_transform_data
 from utils.load import save_to_csv, save_to_postgresql
 
 def main():
-    """Main function to run the ETL process: Extract, Transform, Load."""
+    """Main function to run the ETL process: ETL - Extract, Transform, Load."""
     
-    base_url = 'https://fashion-studio.dicoding.dev/'
-    collected_products = []
+    # URL dasar untuk scraping
+    BASE_URL = 'https://fashion-studio.dicoding.dev/'
 
-    # Mulai scraping dari halaman utama
-    print(f"Memulai scraping dari halaman utama: {base_url}")
-    try:
-        products = extract_data_from_page(base_url)
-        collected_products.extend(products)
-    except Exception as e:
-        print(f"Gagal mengambil data dari halaman utama: {e}")
-
-    # Lanjutkan scraping dari halaman 2 sampai 50
-    for page in range(2, 51):
-        page_url = f"{base_url}page{page}"
-        print(f"Scraping halaman ke-{page}: {page_url}")
-        try:
-            products = extract_data_from_page(page_url)
-            collected_products.extend(products)
-        except Exception as e:
-            print(f"Gagal mengambil data dari halaman {page}: {e}")
-
-    # Jika tidak ada data yang berhasil diambil, hentikan program
-    if not collected_products:
-        print("Tidak ada data produk yang berhasil diambil. Program dihentikan.")
-        return
+    # Ambil data dari URL
+    products = scrape_website(BASE_URL)
 
     # Bersihkan dan transformasi data hasil scraping
-    cleaned_data = clean_and_transform_data(collected_products)
+    cleaned_data = clean_and_transform_data(products)
 
     # Simpan data yang telah dibersihkan ke file CSV
     save_to_csv(cleaned_data)
