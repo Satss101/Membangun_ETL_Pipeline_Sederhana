@@ -1,5 +1,5 @@
 from utils.extract import scrape_website
-from utils.transform import clean_and_transform_data
+from utils.transform import transform_dataset
 from utils.load import save_to_csv, save_to_postgresql
 
 def main():
@@ -12,7 +12,7 @@ def main():
     products = scrape_website(BASE_URL)
 
     # Bersihkan dan transformasi data hasil scraping
-    cleaned_data = clean_and_transform_data(products)
+    cleaned_data = transform_dataset(products)
 
     # Simpan data yang telah dibersihkan ke file CSV
     save_to_csv(cleaned_data)

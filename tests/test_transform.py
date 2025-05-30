@@ -1,32 +1,32 @@
 import unittest
 import pandas as pd
-from utils.transform import clean_and_transform_data
+from utils.transform import transform_dataset
 
-class TestTransformFunctions(unittest.TestCase):
+data_input = [
+    {
+        'title': 'Baju Keren',
+        'price': '100.00',
+        'rating': 'Rating: 4.5',
+        'colors': 'Colors: 3',
+        'size': 'Size: L',
+        'gender': 'Gender: Male'
+    },
+    {
+        'title': 'Unknown Title',
+        'price': '50.00',
+        'rating': 'Rating: 3.5',
+        'colors': 'Colors: 2',
+        'size': 'Size: M',
+        'gender': 'Gender: Female'
+    }
+]
+
+class TestTransform(unittest.TestCase):
     """Pengujian untuk fungsi pembersihan dan transformasi data produk."""
-
     def test_data_dengan_nilai_normal(self):
         """Mengujikan transformasi data yang valid dan lengkap."""
-        data_input = [
-            {
-                'title': 'Baju Keren',
-                'price': '100.00',
-                'rating': 'Rating: 4.5',
-                'colors': 'Colors: 3',
-                'size': 'Size: L',
-                'gender': 'Gender: Male'
-            },
-            {
-                'title': 'Unknown Title',
-                'price': '50.00',
-                'rating': 'Rating: 3.5',
-                'colors': 'Colors: 2',
-                'size': 'Size: M',
-                'gender': 'Gender: Female'
-            }
-        ]
 
-        hasil_df = clean_and_transform_data(data_input)
+        hasil_df = transform_dataset(data_input)
 
         # Pastikan output berupa DataFrame
         self.assertIsInstance(hasil_df, pd.DataFrame)
@@ -42,7 +42,7 @@ class TestTransformFunctions(unittest.TestCase):
 
     def test_data_kosong(self):
         """Mengujikan transformasi jika input berupa list kosong."""
-        hasil_df = clean_and_transform_data([])
+        hasil_df = transform_dataset([])
 
         # Output tetap berupa DataFrame meskipun kosong
         self.assertIsInstance(hasil_df, pd.DataFrame)

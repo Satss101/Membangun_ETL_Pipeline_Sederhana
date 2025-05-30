@@ -5,7 +5,7 @@ from utils.load import save_to_csv, save_to_postgresql
 
 csv_dummy = "dummy.csv"
 
-class TestLoadFunctions(unittest.TestCase):
+class TestLoad(unittest.TestCase):
     """Pengujian terhadap fungsi penyimpanan data (CSV dan PostgreSQL)."""
 
     def test_simpan_ke_csv(self):

@@ -4,23 +4,22 @@ from utils.extract import scrape_website
 from requests.exceptions import RequestException
 
 url_dummy = "http://dummy-url"
-
-class TestExtractData(unittest.TestCase):
+contoh_html = '''
+<div class="collection-card">
+    <h3 class="product-title">Baju Keren</h3>
+    <div class="price-container">100.00</div>
+    <p>Rating: 4.5</p>
+    <p>Colors: 3</p>
+    <p>Size: L</p>
+    <p>Gender: Male</p>
+</div>
+'''
+class TextExtract(unittest.TestCase):
     """Pengujian fungsi extract_data_from_page dari modul extract."""
 
     @patch('utils.extract.requests.get')
-    def test_ekstraksi_berhasil(self, mock_get):
+    def test_ekstraksi_berhasil(self, mock_get): 
         """Mengujikan kasus ketika data berhasil diambil dari halaman HTML."""
-        contoh_html = '''
-        <div class="collection-card">
-            <h3 class="product-title">Baju Keren</h3>
-            <div class="price-container">100.00</div>
-            <p>Rating: 4.5</p>
-            <p>Colors: 3</p>
-            <p>Size: L</p>
-            <p>Gender: Male</p>
-        </div>
-        '''
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.text = contoh_html
