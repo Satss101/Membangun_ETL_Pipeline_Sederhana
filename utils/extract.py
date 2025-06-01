@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 
 # Jumlah halaman maksimum yang akan di-scrape
-MAX_PAGE = 50
+MAX_PAGE = 5
 
 HEADERS = {
     "User-Agent": (

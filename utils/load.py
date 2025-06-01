@@ -9,15 +9,8 @@ def save_to_csv(dataframe):
 def save_to_postgresql(dataframe):
     """Menyimpan DataFrame ke dalam tabel PostgreSQL."""
     try:
-        # Konfigurasi koneksi ke database PostgreSQL
-        db_username = 'satss'
-        db_password = '121'
-        db_host = 'localhost'
-        db_port = '5432'
-        db_name = 'product_db'
-
         # Buat koneksi ke PostgreSQL menggunakan SQLAlchemy
-        engine = create_engine(f'postgresql+psycopg2://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}')
+        engine = create_engine(f'postgresql+psycopg2://satss:121@localhost:5432/product_db')
 
         # Simpan DataFrame ke dalam tabel PostgreSQL (replace = timpa jika tabel sudah ada)
         dataframe.to_sql('products', engine, if_exists='replace', index=False)

@@ -6,7 +6,7 @@ from requests.exceptions import RequestException
 url_dummy = "http://dummy-url"
 contoh_html = '''
 <div class="collection-card">
-    <h3 class="product-title">Baju Keren</h3>
+    <h3 class="product-title">Baju</h3>
     <div class="price-container">100.00</div>
     <p>Rating: 4.5</p>
     <p>Colors: 3</p>
@@ -15,10 +15,10 @@ contoh_html = '''
 </div>
 '''
 class TextExtract(unittest.TestCase):
-    """Pengujian fungsi extract_data_from_page dari modul extract."""
+    """Pengujian fungsi dari modul extract."""
 
     @patch('utils.extract.requests.get')
-    def test_ekstraksi_berhasil(self, mock_get): 
+    def test_ekstraksi_data(self, mock_get): 
         """Mengujikan kasus ketika data berhasil diambil dari halaman HTML."""
         mock_response = Mock()
         mock_response.status_code = 200
@@ -27,11 +27,11 @@ class TextExtract(unittest.TestCase):
 
         hasil = scrape_website(url_dummy)
         self.assertIsInstance(hasil, list)
-        self.assertEqual(len(hasil), 1)
-        self.assertEqual(hasil[0]['title'], 'Baju Keren')
+        self.assertEqual(len(hasil), 5)
+        self.assertEqual(hasil[0]['title'], 'Baju')
 
     @patch('utils.extract.requests.get')
-    def test_gagal_mengakses_url(self, mock_get):
+    def test_gagal_akses_url(self, mock_get):
         """Mengujikan kasus saat terjadi kegagalan koneksi saat mengambil data."""
         mock_get.side_effect = RequestException("Connection error")
 
