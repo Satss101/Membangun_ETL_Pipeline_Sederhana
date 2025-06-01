@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 
 # Jumlah halaman maksimum yang akan di-scrape
-MAX_PAGE = 5
+MAX_PAGE = 50
 
 HEADERS = {
     "User-Agent": (
@@ -42,7 +42,7 @@ def fetch_page_content(url):
     except requests.exceptions.RequestException as error:
         raise Exception (f"Error saat mengambil {url}: {error}")
 
-def scrape_website(url, delay = 2):
+def scrape_website(url, delay = 1):
     """Mengambil data produk dari halaman koleksi berdasarkan URL."""
     data = []
     base_url = url

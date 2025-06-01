@@ -12,8 +12,8 @@ class TestLoad(unittest.TestCase):
         """Mengujikan fungsi penyimpanan DataFrame ke file CSV."""
         dummy_df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
         with patch('pandas.DataFrame.to_csv') as mock_to_csv:
-            save_to_csv(dummy_df, csv_dummy)
-            mock_to_csv.assert_called_once_with(csv_dummy, index=False)
+            save_to_csv(dummy_df)
+            mock_to_csv.assert_called_once_with(dummy_df, index=False)
 
     @patch('utils.load.create_engine')
     def test_simpan_ke_postgresql_sukses(self, mock_create_engine):
@@ -23,11 +23,11 @@ class TestLoad(unittest.TestCase):
         mock_create_engine.return_value = mock_engine
 
         with patch.object(dummy_df, 'to_sql') as mock_to_sql, patch('builtins.print') as mock_print:
-            save_to_postgresql(dummy_df, 'products')
+            save_to_postgresql(dummy_df)
 
             # Pastikan koneksi dibuat dengan parameter yang benar
             mock_create_engine.assert_called_once_with(
-                'postgresql+psycopg2://postgres:Dp061203@localhost:5432/product_db'
+                'postgresql+psycopg2://satss:101@localhost:5432/product_db'
             )
 
             # Pastikan pemanggilan penyimpanan ke tabel benar

@@ -27,7 +27,7 @@ class TextExtract(unittest.TestCase):
 
         hasil = scrape_website(url_dummy)
         self.assertIsInstance(hasil, list)
-        self.assertEqual(len(hasil), 5)
+        self.assertEqual(len(hasil), 50)
         self.assertEqual(hasil[0]['title'], 'Baju')
 
     @patch('utils.extract.requests.get')
@@ -39,6 +39,7 @@ class TextExtract(unittest.TestCase):
             scrape_website(url_dummy)
 
         self.assertIn('Gagal mengakses', str(context.exception))
+
 
     @patch('utils.extract.requests.get')
     def test_tidak_ada_produk_ditemukan(self, mock_get):

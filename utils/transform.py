@@ -21,13 +21,17 @@ def transform_dataset(raw_products):
     """Membersihkan dan mengubah data ke dalam bentuk DataFrame yang terstruktur."""
     df = pd.DataFrame(raw_products)
 
+    if df.empty or 'price' not in df.columns:
+        return df
+    
+
     # Filter baris dengan judul tidak valid seperti "unknown"
     if 'title' in df.columns:
         # Hapus baris dengan judul yang mengandung 'unknown' (case insensitive)
         df = df[~df['title'].str.lower().str.contains('unknown', na=False)]
         # Hapus angka di akhir judul produk
         df['title'] = df['title'].str.replace(r'\s+\d+$', '', regex=True)  
-
+    
     # Bersihkan kolom prize
     df['price'] = df['price'].replace(r'[^\d.]', '', regex=True).replace('', np.nan)
 
