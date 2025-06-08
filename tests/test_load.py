@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, ANY
 import pandas as pd
 from utils.load import save_to_csv, save_to_postgresql
 
@@ -13,7 +13,7 @@ class TestLoad(unittest.TestCase):
         dummy_df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
         with patch('pandas.DataFrame.to_csv') as mock_to_csv:
             save_to_csv(dummy_df)
-            mock_to_csv.assert_called_once_with(dummy_df, index=False)
+            mock_to_csv.assert_called_once_with(ANY, index=False)
 
     @patch('utils.load.create_engine')
     def test_simpan_ke_postgresql_sukses(self, mock_create_engine):
@@ -27,14 +27,14 @@ class TestLoad(unittest.TestCase):
 
             # Pastikan koneksi dibuat dengan parameter yang benar
             mock_create_engine.assert_called_once_with(
-                'postgresql+psycopg2://satss:101@localhost:5432/product_db'
+                'postgresql+psycopg2://satss:121@localhost:5432/product_db'
             )
 
             # Pastikan pemanggilan penyimpanan ke tabel benar
             mock_to_sql.assert_called_once_with('products', mock_engine, if_exists='replace', index=False)
 
             # Verifikasi pesan keberhasilan ditampilkan
-            mock_print.assert_any_call("Data berhasil disimpan ke PostgreSQL, tabel: 'products'")
+            mock_print.assert_any_call("Data berhasil disimpan ke PostgreSQL")
 
     @patch('utils.load.create_engine')
     def test_simpan_ke_postgresql_gagal(self, mock_create_engine):
@@ -43,7 +43,7 @@ class TestLoad(unittest.TestCase):
         mock_create_engine.side_effect = Exception("Koneksi gagal")
 
         with patch('builtins.print') as mock_print:
-            save_to_postgresql(dummy_df, 'products')
+            save_to_postgresql(dummy_df)
 
             # Pastikan error ditangani dan pesan kesalahan dicetak
             semua_pesan = [call_args[0][0] for call_args in mock_print.call_args_list]

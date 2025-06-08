@@ -40,7 +40,8 @@ def fetch_page_content(url):
         response.raise_for_status()
         return response.text
     except requests.exceptions.RequestException as error:
-        raise Exception (f"Error saat mengambil {url}: {error}")
+        raise Exception(f"Gagal mengakses {url}: {error}")
+
 
 def scrape_website(url, delay = 1):
     """Mengambil data produk dari halaman koleksi berdasarkan URL."""
@@ -63,6 +64,7 @@ def scrape_website(url, delay = 1):
         print(f"{len(data)} produk berhasil diambil dari {base_url}")
     except Exception as parse_error:
         raise Exception(f"Terjadi kesalahan saat parsing HTML: {parse_error}")
+    
     
     for page_number in range(2,MAX_PAGE + 1): 
         page_url = f"{url}page{page_number}"
